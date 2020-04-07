@@ -559,8 +559,10 @@ class DaeExporter:
         name_to_use = mesh.name
         if (custom_name is not None and custom_name != ""):
             name_to_use = custom_name
-
-        mesh = node.to_mesh(preserve_all_data_layers=False, depsgraph=bpy.context.evaluated_depsgraph_get())
+        depgraph = bpy.context.evaluated_depsgraph_get()
+        if (apply_modifiers):
+            node = node.evaluated_get(depgraph)
+        mesh = node.to_mesh(preserve_all_data_layers=True, depsgraph=depgraph)
         # 2.8 update: warning, Blender does not support anymore the "RENDER" argument to apply modifier
         # with render state, only current state
         
